@@ -1,10 +1,10 @@
-const CACHE = 'nmjl-scorekeeper-v1';
+const CACHE = 'nmjl-scorekeeper-v2';
 
 const FILES = [
   './',
   './index.html',
   './manifest.webmanifest',
-  './icon.svg'
+  './icon.png'
 ];
 
 self.addEventListener('install', event => {
