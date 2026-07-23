@@ -1,640 +1,503 @@
 <!doctype html>
 <html lang="en">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-  <meta name="theme-color" content="#f7f4ee">
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="default">
-  <meta name="apple-mobile-web-app-title" content="Mahjong Scorer">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#f7f4ee">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="NMJL Scorer">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="icon.png">
+<title>2026 NMJL Scorekeeper</title>
 
-  <link rel="manifest" href="manifest.webmanifest">
-  <link rel="apple-touch-icon" href="icon.png">
-
-  <title>2026 NMJL Scorekeeper</title>
-
-  <style>
-    :root {
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-      color: #1e1e1e;
-      background: #f7f4ee;
-    }
-
-    * {
-      box-sizing: border-box;
-    }
-
-    body {
-      margin: 0;
-      padding:
-        env(safe-area-inset-top)
-        14px
-        env(safe-area-inset-bottom);
-    }
-
-    main {
-      max-width: 720px;
-      margin: auto;
-    }
-
-    h1 {
-      font-size: 1.45rem;
-      margin: 14px 0 4px;
-    }
-
-    .sub {
-      color: #666;
-      margin: 0 0 16px;
-    }
-
-    .scores {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 10px;
-    }
-
-    .score {
-      background: white;
-      border: 1px solid #ddd;
-      border-radius: 16px;
-      padding: 12px;
-    }
-
-    .score input {
-      font-weight: 600;
-      font-size: 1rem;
-      width: 100%;
-      border: 0;
-      border-bottom: 1px solid #ddd;
-      padding: 5px 0;
-      background: transparent;
-    }
-
-    .amount {
-      font-size: 1.5rem;
-      font-weight: 700;
-      margin-top: 8px;
-    }
-
-    section {
-      background: white;
-      border: 1px solid #ddd;
-      border-radius: 18px;
-      padding: 14px;
-      margin-top: 14px;
-    }
-
-    label {
-      display: block;
-      margin: 11px 0;
-      font-weight: 600;
-    }
-
-    select {
-      width: 100%;
-      font-size: 1rem;
-      padding: 11px;
-      margin-top: 5px;
-      border: 1px solid #bbb;
-      border-radius: 12px;
-      background: white;
-    }
-
-    .radios,
-    .check {
-      display: flex;
-      gap: 18px;
-      align-items: center;
-      flex-wrap: wrap;
-      margin: 12px 0;
-    }
-
-    .radios label,
-    .check label {
-      margin: 0;
-      font-weight: 500;
-    }
-
-    button {
-      font-size: 1rem;
-      padding: 11px 14px;
-      border-radius: 12px;
-      border: 1px solid #aaa;
-      background: white;
-    }
-
-    button.primary {
-      background: #222;
-      color: white;
-      border-color: #222;
-    }
-
-    .buttons {
-      display: flex;
-      gap: 8px;
-      flex-wrap: wrap;
-      margin-top: 12px;
-    }
-
-    .preview {
-      background: #f3f3f3;
-      border-radius: 12px;
-      padding: 11px;
-      margin-top: 12px;
-    }
-
-    .history {
-      font-size: .94rem;
-    }
-
-    .entry {
-      border-top: 1px solid #eee;
-      padding: 10px 0;
-    }
-
-    small {
-      color: #666;
-    }
-  </style>
+<style>
+:root{
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  color:#1e1e1e;background:#f7f4ee;
+}
+*{box-sizing:border-box}
+body{margin:0;padding:env(safe-area-inset-top) 14px env(safe-area-inset-bottom)}
+main{max-width:720px;margin:auto}
+h1{font-size:1.45rem;margin:14px 0 4px}
+h2{font-size:1.05rem;margin:0 0 10px}
+.sub{color:#666;margin:0 0 14px}
+section{background:#fff;border:1px solid #ddd;border-radius:18px;padding:14px;margin-top:14px}
+label{display:block;margin:10px 0;font-weight:600}
+input[type=text],select{
+ width:100%;font-size:1rem;padding:11px;margin-top:5px;
+ border:1px solid #bbb;border-radius:12px;background:#fff
+}
+.scores{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px}
+.score{background:#fff;border:1px solid #ddd;border-radius:16px;padding:12px}
+.score input{font-weight:600;font-size:1rem;width:100%;border:0;border-bottom:1px solid #ddd;padding:5px 0;background:transparent}
+.amount{font-size:1.45rem;font-weight:700;margin-top:8px}
+.metrics{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px}
+.metric{border:1px solid #ddd;border-radius:14px;padding:10px;background:#fff}
+.metric span{display:block;color:#666;font-size:.82rem}
+.metric strong{font-size:1.25rem}
+.radios,.check,.buttons{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin:12px 0}
+.radios label,.check label{margin:0;font-weight:500}
+button{font-size:1rem;padding:11px 14px;border-radius:12px;border:1px solid #aaa;background:#fff}
+button.primary{background:#222;color:#fff;border-color:#222}
+button.danger{border-color:#a22;color:#a22}
+.preview{background:#f3f3f3;border-radius:12px;padding:11px;margin-top:12px}
+.entry{border-top:1px solid #eee;padding:10px 0}
+small,.muted{color:#666}
+.actions{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+@media(max-width:420px){.actions{grid-template-columns:1fr}}
+</style>
 </head>
 
 <body>
 <main>
 
-  <h1>2026 NMJL Scorekeeper</h1>
-  <p class="sub">Four-player American Mah Jongg scoring</p>
+<h1>2026 NMJL Scorekeeper</h1>
+<p class="sub" id="eventHeader">American Mah Jongg Tournament Scoring</p>
 
-  <div class="scores" id="scores"></div>
+<section id="setup">
+<h2>Tournament / Event</h2>
 
-  <section>
+<label>
+Event name
+<input id="eventName" type="text" placeholder="e.g. Mahjong and Mingle">
+</label>
 
-    <strong>Completed hand</strong>
+<label>
+Number of players
+<select id="playerCount">
+<option value="2">2 players</option>
+<option value="3">3 players</option>
+<option value="4" selected>4 players</option>
+</select>
+</label>
 
-    <label>
-      Winner
-      <select id="winner"></select>
-    </label>
+<label>
+Wall-game kitty contribution — per player
+<select id="kittyValue">
+<option value="25">25¢</option>
+<option value="30">30¢</option>
+<option value="35">35¢</option>
+<option value="40">40¢</option>
+<option value="45">45¢</option>
+<option value="50">50¢</option>
+<option value="60">60¢</option>
+<option value="75">75¢</option>
+<option value="100">$1.00</option>
+</select>
+</label>
 
-    <label>
-      Value printed on 2026 NMJL card
-      <select id="value">
-        <option value="25">25¢</option>
-        <option value="30">30¢</option>
-        <option value="35">35¢</option>
-        <option value="40">40¢</option>
-        <option value="45">45¢</option>
-        <option value="50">50¢</option>
-        <option value="60">60¢</option>
-        <option value="75">75¢</option>
-      </select>
-    </label>
+<button class="primary" id="startTournament">Start Tournament</button>
+</section>
 
-    <div class="radios">
-      <label>
-        <input type="radio" name="type" value="discard" checked>
-        Discard
-      </label>
+<div id="gameArea" style="display:none">
 
-      <label>
-        <input type="radio" name="type" value="self">
-        Self-picked
-      </label>
-    </div>
+<div class="metrics">
+<div class="metric"><span>Game</span><strong id="gameNumber">1</strong></div>
+<div class="metric"><span>Kitty</span><strong id="kittyDisplay">$0.00</strong></div>
+</div>
 
-    <label id="discarderLabel">
-      Discarded by
-      <select id="discarder"></select>
-    </label>
+<div class="scores" id="scores"></div>
 
-    <div class="check">
-      <label>
-        <input id="jokerless" type="checkbox">
-        Jokerless hand
-      </label>
-    </div>
+<section>
+<h2>Completed Hand</h2>
 
-    <div class="preview" id="preview"></div>
+<label>
+Winner
+<select id="winner"></select>
+</label>
 
-    <div class="buttons">
-      <button class="primary" id="record">Record hand</button>
-      <button id="wall">Wall game</button>
-      <button id="undo">Undo</button>
-    </div>
+<label>
+Value printed on 2026 NMJL card
+<select id="value">
+<option value="25">25¢</option>
+<option value="30">30¢</option>
+<option value="35">35¢</option>
+<option value="40">40¢</option>
+<option value="45">45¢</option>
+<option value="50">50¢</option>
+<option value="60">60¢</option>
+<option value="75">75¢</option>
+</select>
+</label>
 
-  </section>
+<div class="radios">
+<label><input type="radio" name="type" value="discard" checked> Discard</label>
+<label><input type="radio" name="type" value="self"> Self-picked</label>
+</div>
 
-  <section>
+<label id="discarderLabel">
+Discarded by
+<select id="discarder"></select>
+</label>
 
-    <div style="display:flex;justify-content:space-between;align-items:center;gap:10px">
-      <strong>Game history</strong>
-      <button id="reset">New game</button>
-    </div>
+<div class="check">
+<label><input id="jokerless" type="checkbox"> Jokerless hand</label>
+</div>
 
-    <div class="history" id="history">
-      <small>No hands recorded yet.</small>
-    </div>
+<div class="preview" id="preview"></div>
 
-  </section>
+<div class="buttons">
+<button class="primary" id="record">Record Hand</button>
+<button id="wall">Wall Game</button>
+<button id="undo">Undo</button>
+</div>
+</section>
 
-  <p>
-    <small>
-      Use your official 2026 NMJL card to identify the hand and select
-      its printed value. This app does not reproduce the card's
-      copyrighted hand patterns.
-    </small>
-  </p>
+<section>
+<h2>Current Game History</h2>
+<div id="history"><small>No hands recorded yet.</small></div>
+</section>
+
+<section>
+<h2>Tournament Controls</h2>
+
+<div class="actions">
+<button id="newGame">New Game</button>
+<button id="exportGame">Export Current Game</button>
+<button id="exportTournament">Export Tournament</button>
+<button class="danger" id="endTournament">End Tournament</button>
+</div>
+</section>
+
+</div>
+
+<p><small>Use your official 2026 NMJL card to identify the winning hand and select its printed value.</small></p>
 
 </main>
 
 <script>
+const KEY='nmjl-scorekeeper-v2';
 
-const KEY = 'nmjl2026scorekeeper-v1';
-
-let state = {
-  names: ['Player 1','Player 2','Player 3','Player 4'],
-  scores: [0,0,0,0],
-  history: []
+let state={
+ active:false,
+ eventName:'',
+ date:'',
+ playerCount:4,
+ names:['Player 1','Player 2','Player 3','Player 4'],
+ scores:[0,0,0,0],
+ kitty:0,
+ kittyValue:25,
+ gameNumber:1,
+ currentHistory:[],
+ games:[],
+ completedTournaments:[]
 };
 
-try {
-  const saved = JSON.parse(localStorage.getItem(KEY));
-  if (saved) state = saved;
-} catch(e) {}
+try{
+ const saved=JSON.parse(localStorage.getItem(KEY));
+ if(saved) state={...state,...saved};
+}catch(e){}
 
-const $ = id => document.getElementById(id);
+const $=id=>document.getElementById(id);
+const money=c=>'$'+(c/100).toFixed(2);
+const activeNames=()=>state.names.slice(0,state.playerCount);
 
-const winner = $('winner');
-const discarder = $('discarder');
-const value = $('value');
-const jokerless = $('jokerless');
+function save(){localStorage.setItem(KEY,JSON.stringify(state))}
 
-function save() {
-  localStorage.setItem(KEY, JSON.stringify(state));
+function esc(s){
+ return String(s).replace(/[&<>"']/g,m=>({
+ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'
+ }[m]));
 }
 
-function type() {
-  return document.querySelector('input[name=type]:checked').value;
+function winType(){
+ return document.querySelector('input[name=type]:checked').value;
 }
 
-function esc(s) {
-  return String(s).replace(
-    /[&<>"']/g,
-    m => ({
-      '&':'&amp;',
-      '<':'&lt;',
-      '>':'&gt;',
-      '"':'&quot;',
-      "'":'&#39;'
-    }[m])
-  );
+function setupPlayers(){
+ $('winner').innerHTML=activeNames().map((n,i)=>
+ `<option value="${i}">${esc(n)}</option>`).join('');
+ updateDiscarders();
 }
 
-function playerOptions() {
-
-  winner.innerHTML = state.names
-    .map((n,i) =>
-      `<option value="${i}">${esc(n)}</option>`
-    )
-    .join('');
-
-  updateDiscarders();
+function updateDiscarders(){
+ const w=+$('winner').value;
+ $('discarder').innerHTML=activeNames().map((n,i)=>
+ i!==w?`<option value="${i}">${esc(n)}</option>`:'').join('');
 }
 
-function updateDiscarders() {
+function payments(){
+ const w=+$('winner').value;
+ const base=+$('value').value;
+ const mult=$('jokerless').checked?2:1;
+ const p=Array(state.playerCount).fill(0);
 
-  const w = +winner.value;
-
-  discarder.innerHTML = state.names
-    .map((n,i) =>
-      i !== w
-        ? `<option value="${i}">${esc(n)}</option>`
-        : ''
-    )
-    .join('');
+ if(winType()==='self'){
+   for(let i=0;i<state.playerCount;i++)
+     if(i!==w)p[i]=base*2*mult;
+ }else{
+   const d=+$('discarder').value;
+   for(let i=0;i<state.playerCount;i++)
+     if(i!==w)p[i]=base*mult*(i===d?2:1);
+ }
+ return p;
 }
 
-function payments() {
+function preview(){
+ $('discarderLabel').style.display=winType()==='discard'?'block':'none';
 
-  const w = +winner.value;
-  const base = +value.value;
+ const w=+$('winner').value;
+ const p=payments();
+ const total=p.reduce((a,b)=>a+b,0);
 
-  const multiplier = jokerless.checked ? 2 : 1;
-
-  const payments = [0,0,0,0];
-
-  if (type() === 'self') {
-
-    for (let i=0; i<4; i++) {
-
-      if (i !== w)
-        payments[i] = base * 2 * multiplier;
-
-    }
-
-  } else {
-
-    const d = +discarder.value;
-
-    for (let i=0; i<4; i++) {
-
-      if (i !== w)
-        payments[i] =
-          base * multiplier * (i === d ? 2 : 1);
-
-    }
-  }
-
-  return payments;
+ $('preview').innerHTML=
+ `<strong>${esc(state.names[w])} receives ${money(total)}</strong><br><small>`+
+ p.map((x,i)=>i!==w?`${esc(state.names[i])} pays ${money(x)}`:'')
+ .filter(Boolean).join(' • ')+'</small>';
 }
 
-function preview() {
+function render(){
+ $('setup').style.display=state.active?'none':'block';
+ $('gameArea').style.display=state.active?'block':'none';
 
-  $('discarderLabel').style.display =
-    type() === 'discard'
-      ? 'block'
-      : 'none';
+ if(!state.active)return;
 
-  const w = +winner.value;
+ $('eventHeader').textContent=
+ `${state.eventName} • ${state.date}`;
 
-  const pay = payments();
+ $('gameNumber').textContent=state.gameNumber;
+ $('kittyDisplay').textContent=money(state.kitty);
 
-  const total =
-    pay.reduce((a,b) => a+b, 0);
+ $('scores').innerHTML=activeNames().map((n,i)=>`
+ <div class="score">
+ <input data-player="${i}" value="${esc(n)}">
+ <div class="amount">${state.scores[i]>=0?'+':''}${money(state.scores[i])}</div>
+ </div>`).join('');
 
-  $('preview').innerHTML =
+ document.querySelectorAll('[data-player]').forEach(input=>{
+ input.addEventListener('change',e=>{
+   const i=+e.target.dataset.player;
+   state.names[i]=e.target.value.trim()||`Player ${i+1}`;
+   save();setupPlayers();render();
+ });
+ });
 
-    `<strong>
-       ${esc(state.names[w])}
-       receives
-       $${(total/100).toFixed(2)}
-     </strong>
+ $('history').innerHTML=state.currentHistory.length
+ ?state.currentHistory.slice().reverse().map((h,i)=>
+ `<div class="entry"><strong>Hand ${state.currentHistory.length-i}:</strong> ${esc(h.text)}</div>`).join('')
+ :'<small>No hands recorded yet.</small>';
 
-     <br>
-
-     <small>
-
-     ${
-       pay
-       .map((x,i) =>
-          i !== w
-            ? `${esc(state.names[i])}
-               pays
-               $${(x/100).toFixed(2)}`
-            : ''
-       )
-       .filter(Boolean)
-       .join(' • ')
-     }
-
-     </small>`;
+ setupPlayers();
+ preview();
+ save();
 }
 
-function render() {
-
-  $('scores').innerHTML =
-
-    state.names
-    .map((n,i) =>
-
-      `<div class="score">
-
-         <input
-           data-name="${i}"
-           value="${esc(n)}"
-           aria-label="Player ${i+1} name">
-
-         <div class="amount">
-
-           ${state.scores[i] >= 0 ? '+' : ''}
-
-           $${(state.scores[i]/100).toFixed(2)}
-
-         </div>
-
-       </div>`
-
-    )
-    .join('');
-
-  document
-  .querySelectorAll('[data-name]')
-  .forEach(input =>
-
-    input.addEventListener(
-      'change',
-      e => {
-
-        const i =
-          +e.target.dataset.name;
-
-        state.names[i] =
-          e.target.value.trim()
-          ||
-          `Player ${i+1}`;
-
-        save();
-
-        playerOptions();
-
-        render();
-
-      }
-    )
-  );
-
-  if (state.history.length) {
-
-    $('history').innerHTML =
-
-      state.history
-      .slice()
-      .reverse()
-      .map((h,r) =>
-
-        `<div class="entry">
-
-           <strong>
-             Hand ${state.history.length-r}:
-           </strong>
-
-           ${esc(h.text)}
-
-         </div>`
-
-      )
-      .join('');
-
-  } else {
-
-    $('history').innerHTML =
-      '<small>No hands recorded yet.</small>';
-
-  }
-
-  preview();
-
-  save();
+function startTournament(){
+ state.active=true;
+ state.eventName=$('eventName').value.trim()||'Mahjong Event';
+ state.playerCount=+$('playerCount').value;
+ state.kittyValue=+$('kittyValue').value;
+ state.date=new Date().toLocaleDateString();
+ state.names=Array.from({length:4},(_,i)=>`Player ${i+1}`);
+ state.scores=[0,0,0,0];
+ state.kitty=0;
+ state.gameNumber=1;
+ state.currentHistory=[];
+ state.games=[];
+ render();
 }
 
-function record() {
+function recordHand(){
+ const w=+$('winner').value;
+ const p=payments();
+ const beforeScores=[...state.scores];
+ const beforeKitty=state.kitty;
 
-  const w = +winner.value;
+ let total=0;
 
-  const pay = payments();
+ p.forEach((amt,i)=>{
+ if(i!==w){
+   state.scores[i]-=amt;
+   total+=amt;
+ }
+ });
 
-  const before =
-    [...state.scores];
+ state.scores[w]+=total;
 
-  let total = 0;
+ const desc=winType()==='self'
+ ?'self-picked'
+ :`won on ${state.names[+$('discarder').value]}'s discard`;
 
-  pay.forEach((amount,i) => {
+ state.currentHistory.push({
+ beforeScores,beforeKitty,
+ type:'hand',
+ text:`${state.names[w]} ${desc}, ${$('value').value}¢${$('jokerless').checked?', jokerless':''}. Won ${money(total)}.`
+ });
 
-    if (i !== w) {
-
-      state.scores[i] -= amount;
-
-      total += amount;
-
-    }
-
-  });
-
-  state.scores[w] += total;
-
-  const description =
-
-    type() === 'self'
-
-    ? 'self-picked'
-
-    : `won on ${state.names[+discarder.value]}'s discard`;
-
-  state.history.push({
-
-    before,
-
-    text:
-
-      `${state.names[w]} ${description}, ` +
-
-      `${value.value}¢` +
-
-      `${jokerless.checked ? ', jokerless' : ''}. ` +
-
-      `Won $${(total/100).toFixed(2)}.`
-
-  });
-
-  render();
+ render();
 }
 
-winner.addEventListener(
-  'change',
-  () => {
-    updateDiscarders();
-    preview();
-  }
-);
+function wallGame(){
+ const beforeScores=[...state.scores];
+ const beforeKitty=state.kitty;
 
-discarder.addEventListener(
-  'change',
-  preview
-);
+ for(let i=0;i<state.playerCount;i++)
+ state.scores[i]-=state.kittyValue;
 
-value.addEventListener(
-  'change',
-  preview
-);
+ const total=state.kittyValue*state.playerCount;
+ state.kitty+=total;
 
-jokerless.addEventListener(
-  'change',
-  preview
-);
+ state.currentHistory.push({
+ beforeScores,beforeKitty,
+ type:'wall',
+ text:`Wall game — each player contributed ${money(state.kittyValue)} to the kitty (${money(total)} total).`
+ });
 
-document
-.querySelectorAll('input[name=type]')
-.forEach(
-  x => x.addEventListener(
-    'change',
-    preview
-  )
-);
+ render();
+}
 
-$('record')
-.addEventListener(
-  'click',
-  record
-);
+function undo(){
+ if(!state.currentHistory.length)return;
+ const last=state.currentHistory.pop();
+ state.scores=[...last.beforeScores];
+ state.kitty=last.beforeKitty;
+ render();
+}
 
-$('wall')
-.addEventListener(
-  'click',
-  () => {
+function archiveGame(){
+ state.games.push({
+ gameNumber:state.gameNumber,
+ date:new Date().toISOString(),
+ history:[...state.currentHistory],
+ endingScores:[...state.scores],
+ kitty:state.kitty
+ });
+}
 
-    state.history.push({
+function newGame(){
+ archiveGame();
+ state.gameNumber++;
+ state.currentHistory=[];
+ render();
+}
 
-      before:
-        [...state.scores],
+function csvEscape(v){
+ return `"${String(v).replace(/"/g,'""')}"`;
+}
 
-      text:
-        'Wall game — no score change.'
+function downloadCSV(filename,rows){
+ const csv=rows.map(r=>r.map(csvEscape).join(',')).join('\n');
+ const blob=new Blob([csv],{type:'text/csv;charset=utf-8'});
+ const url=URL.createObjectURL(blob);
+ const a=document.createElement('a');
+ a.href=url;a.download=filename;a.click();
+ URL.revokeObjectURL(url);
+}
 
-    });
+function exportGame(){
+ const rows=[
+ ['Event',state.eventName],
+ ['Date',state.date],
+ ['Game',state.gameNumber],
+ [],
+ ['Entry','Description']
+ ];
 
-    render();
+ state.currentHistory.forEach((h,i)=>
+ rows.push([i+1,h.text]));
 
-  }
-);
+ rows.push([]);
+ rows.push(['Player','Balance']);
 
-$('undo')
-.addEventListener(
-  'click',
-  () => {
+ activeNames().forEach((n,i)=>
+ rows.push([n,money(state.scores[i])]));
 
-    if (!state.history.length)
-      return;
+ rows.push(['Kitty',money(state.kitty)]);
 
-    state.scores =
-      [...state.history.pop().before];
+ downloadCSV(
+ `${state.eventName}-Game-${state.gameNumber}.csv`,
+ rows
+ );
+}
 
-    render();
+function exportTournament(){
+ const rows=[
+ ['Event',state.eventName],
+ ['Date',state.date],
+ ['Players',state.playerCount],
+ [],
+ ['Game','Entry','Description']
+ ];
 
-  }
-);
+ state.games.forEach(g=>{
+ g.history.forEach((h,i)=>
+ rows.push([g.gameNumber,i+1,h.text]));
+ });
 
-$('reset')
-.addEventListener(
-  'click',
-  () => {
+ state.currentHistory.forEach((h,i)=>
+ rows.push([state.gameNumber,i+1,h.text]));
 
-    if (
-      confirm(
-        'Start a new game and clear scores/history?'
-      )
-    ) {
+ rows.push([]);
+ rows.push(['Current Player','Balance']);
 
-      state.scores =
-        [0,0,0,0];
+ activeNames().forEach((n,i)=>
+ rows.push([n,money(state.scores[i])]));
 
-      state.history =
-        [];
+ rows.push(['Current Kitty',money(state.kitty)]);
 
-      render();
+ downloadCSV(
+ `${state.eventName}-Tournament.csv`,
+ rows
+ );
+}
 
-    }
+function endTournament(){
+ if(!confirm(`End ${state.eventName} and distribute the kitty equally?`))
+ return;
 
-  }
-);
+ archiveGame();
 
-playerOptions();
+ const share=Math.floor(state.kitty/state.playerCount);
+ const remainder=state.kitty-(share*state.playerCount);
+
+ for(let i=0;i<state.playerCount;i++)
+ state.scores[i]+=share;
+
+ const record={
+ eventName:state.eventName,
+ date:state.date,
+ games:[...state.games],
+ players:activeNames(),
+ finalScores:[...state.scores.slice(0,state.playerCount)],
+ kittyShare:share,
+ undistributedRemainder:remainder
+ };
+
+ state.completedTournaments.push(record);
+
+ alert(
+ `Tournament complete.\n\n`+
+ `Each player receives ${money(share)} from the kitty.`+
+ (remainder?`\nUndistributed remainder: ${money(remainder)}`:'')
+ );
+
+ state.kitty=remainder;
+ state.active=false;
+ save();
+ render();
+}
+
+$('startTournament').addEventListener('click',startTournament);
+$('winner').addEventListener('change',()=>{updateDiscarders();preview()});
+$('discarder').addEventListener('change',preview);
+$('value').addEventListener('change',preview);
+$('jokerless').addEventListener('change',preview);
+document.querySelectorAll('input[name=type]').forEach(x=>x.addEventListener('change',preview));
+
+$('record').addEventListener('click',recordHand);
+$('wall').addEventListener('click',wallGame);
+$('undo').addEventListener('click',undo);
+$('newGame').addEventListener('click',newGame);
+$('exportGame').addEventListener('click',exportGame);
+$('exportTournament').addEventListener('click',exportTournament);
+$('endTournament').addEventListener('click',endTournament);
 
 render();
 
-if ('serviceWorker' in navigator) {
-
-  navigator.serviceWorker
-    .register('./sw.js');
-
-}
+if('serviceWorker' in navigator)
+ navigator.serviceWorker.register('./sw.js');
 
 </script>
+</body>
+</html>
