@@ -1010,8 +1010,8 @@ function handRows(history){
  .filter(h=>h.type==='hand')
  .map(h=>[
 
- h.gameNumber,
-
+history.filter(x=>x.type==='hand').indexOf(h)+1,
+  
  h.winner,
 
  h.winMethod,
@@ -1039,7 +1039,7 @@ function exportGame(){
  [],
 
  [
- 'Game #',
+ 'Hand #',
  'Winner',
  'Discard/Draw',
  'Who Discarded',
@@ -1093,7 +1093,7 @@ function exportTournament(){
  [],
 
  [
- 'Game #',
+ 'Hand #',
  'Winner',
  'Discard/Draw',
  'Who Discarded',
