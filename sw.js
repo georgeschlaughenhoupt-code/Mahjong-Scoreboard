@@ -1,4 +1,4 @@
-const CACHE = 'nmjl-scorekeeper-v3';
+const CACHE = 'nmjl-scorekeeper-v4';
 
 const FILES = [
   './',
